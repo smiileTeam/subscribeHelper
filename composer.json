@@ -1,0 +1,22 @@
+{
+  "name": "smiileteam/subscribeHelper",
+  "description": "Take advantage of our subscribeHelper to fullfill Smiile subscribe form from your users informations and validate their profiles",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alexis Urien",
+      "email": "alexis@smiile.com",
+      "homepage": "https://github.com/axi"
+    }
+  ],
+  "keywords": [
+    "smiile"
+  ],
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Smiile\\Api\\": "src/"
+    }
+  }
+}
