@@ -21,7 +21,7 @@ Cgu checkbox | cgu |
 Please contact SmiileTeam to get a provider key and a secret code
 
 ### Generate the subscribe link
-The link to generate is a concatenation of your user informations fields and a md5 checksum from those informations in a specific order and your private key.
+The link to generate is a concatenation of your user informations fields and a md5 checksum from those informations in a specific order and your private key. Please note that you must provide all the needed informations (fields above with an X).
 
 ```
 link = https://app.smiile.com/inscription?
@@ -44,5 +44,4 @@ link = https://app.smiile.com/inscription?
 
 
 # Library
-We developped a PHP class.
-You can find it [here](https://github.com/smiileTeam/subscribeHelper)
+You can find a php class implementing this [here](https://github.com/smiileTeam/subscribeHelper)
