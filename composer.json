@@ -1,22 +1,27 @@
 {
-  "name": "smiileteam/subscribeHelper",
-  "description": "Take advantage of our subscribeHelper to fullfill Smiile subscribe form from your users informations and validate their profiles",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Alexis Urien",
-      "email": "alexis@smiile.com",
-      "homepage": "https://github.com/axi"
+    "name": "smiileteam/subscribe-helper",
+    "description": "Take advantage of our subscribeHelper to fullfill Smiile subscribe form from your users informations and validate their profiles",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexis Urien",
+            "email": "alexis@smiile.com",
+            "homepage": "https://github.com/axi"
+        }
+    ],
+    "type": "library",
+    "homepage": "https://www.smiile.com/api/doc/subscribeHelper",
+    "keywords": [
+        "smiile",
+        "social",
+        "networking"
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Smiile\\": "src/"
+        }
     }
-  ],
-  "keywords": [
-    "smiile"
-  ],
-  "require": {
-  },
-  "autoload": {
-    "psr-4": {
-      "Smiile\\Api\\": "src/"
-    }
-  }
 }

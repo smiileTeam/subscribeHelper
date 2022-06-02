@@ -1,86 +1,108 @@
 <?php
 
-namespace Smiile\Api;
+namespace Smiile;
+
+use RuntimeException;
 
 class SubscribeHelper
 {
     const APP_URL = "https://app.smiile.com";
+    const APP_URL_DEMO = "https://demo-app.smiile.com";
+
+    const VERSION_1 = 1;
+    const VERSION_2 = 2;
+
+    const DEFINITION_AND_ORDER = [
+        self::VERSION_1 => [
+            "address",
+            "civility",
+            "name",
+            "lastName",
+            "mail",
+        ],
+        self::VERSION_2 => [
+            "address",
+            "name",
+            "lastName",
+            "mail",
+        ],
+    ];
 
     /** @var string */
     private $providerKey;
     /** @var string */
     private $secretCode;
 
-    private $definitionAndOrder = array(
-        "address",
-        "civility",
-        "name",
-        "lastName",
-        "mail",
-    );
+    /** @var bool */
+    private $demoMode = false;
 
-    /**
-     * @param string $providerKey
-     * @param string $secretCode
-     */
-    public function __construct(string $providerKey, string $secretCode)
+    /** @var int */
+    private $version;
+
+    public function __construct(string $providerKey, string $secretCode, int $version = self::VERSION_2)
     {
         $this->providerKey = $providerKey;
         $this->secretCode = $secretCode;
+        if (!in_array($version, [self::VERSION_1, self::VERSION_2], true)) {
+            throw new RuntimeException(__METHOD__ . ' Invalid version');
+        }
+        $this->version = $version;
     }
 
     /**
-     * @param array $userDatas
-     * @return string
-     * @throws \Exception
+     * @throws RuntimeException
      */
-    public function getSubscribeLink(array $userDatas)
+    public function getSubscribeLink(array $userDatas): string
     {
         $userDatas = $this->verifyAndOrder($userDatas);
 
-        return self::APP_URL . '/inscription?' .
+        return $this->getAppUrl() . '/inscription?' .
             http_build_query(
                 array_merge(
-                    array(
-                        "providerKey" => $this->providerKey,
-                    ),
+                    [
+                        'providerKey' => $this->providerKey,
+                    ],
                     $userDatas,
-                    array(
-                        "checksum" => $this->generateCreateKey(
+                    [
+                        'checksum' => $this->generateCreateKey(
                             array_merge(
                                 $userDatas,
-                                array("secretCode" => $this->secretCode)
+                                ['secretCode' => $this->secretCode]
                             )
                         ),
-                    )
+                    ]
                 )
             );
     }
 
     /**
-     * @param array $userDatas
-     * @return array
-     * @throws \Exception
+     * @throws RuntimeException
      */
-    protected function verifyAndOrder(array $userDatas)
+    private function verifyAndOrder(array $userDatas): array
     {
         $orderedUserDatas = [];
-        foreach ($this->definitionAndOrder as $item) {
+        foreach (self::DEFINITION_AND_ORDER[$this->version] as $item) {
             if (!isset($userDatas[$item])) {
-                throw new \Exception(__METHOD__ . " Missing mendatory field " . $item);
-            } else {
-                $orderedUserDatas[$item] = $userDatas[$item];
+                throw new RuntimeException(__METHOD__ . ' Missing mendatory field ' . $item);
             }
+
+            $orderedUserDatas[$item] = $userDatas[$item];
         }
 
         return $orderedUserDatas;
     }
 
-    /**
-     * @param array $vars
-     * @return string
-     */
-    private function generateCreateKey(array $vars)
+    public function setDemoMode(bool $demoMode)
+    {
+        $this->demoMode = $demoMode;
+    }
+
+    private function getAppUrl(): string
+    {
+        return $this->demoMode ? self::APP_URL_DEMO : self::APP_URL;
+    }
+
+    private function generateCreateKey(array $vars): string
     {
         $key = '';
         foreach ($vars as $var) {
